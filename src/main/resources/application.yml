@@ -1,0 +1,17 @@
+server:
+  port: 9090
+  error:
+    path: error.jsp
+
+spring:
+  application:
+    name: demo
+  data:
+    mongodb:
+      uri: mongodb+srv://root:root@abdulaxad.jgk5c4k.mongodb.net/?retryWrites=true&w=majority&appName=Abdulaxad
+      database: Demo
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: mastermak837@gmail.com
+    password: xlmdzklbepeohiiz
