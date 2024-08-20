@@ -1,6 +1,7 @@
 package com.example.demo.config;
 
 import com.example.demo.filter.JwtFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -35,10 +37,11 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest()
                         .authenticated())
+//                .formLogin(f->f.loginPage("/authenticate").permitAll())
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(Customizer.withDefaults())
                 .addFilterBefore(jwtFilter,  UsernamePasswordAuthenticationFilter.class);
-//                .formLogin(l->l.loginPage("/authenticate").permitAll())
+
 //                .logout(l->l.logoutUrl("/logout").permitAll());
         return http.build();
     }
@@ -56,4 +59,6 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)throws Exception{
         return configuration.getAuthenticationManager();
     }
+
+
 }

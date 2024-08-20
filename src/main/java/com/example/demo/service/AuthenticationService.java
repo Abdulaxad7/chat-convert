@@ -25,7 +25,9 @@ public class AuthenticationService {
     private final BCryptPasswordEncoder encoder=new BCryptPasswordEncoder(15);
 
     public String register(Users user){
+        System.out.println(user);
         user.setPassword(encoder.encode(user.getPassword()));
+
         repo.save(user);
         return jwtService.generateToken(user.getEmail());
     }
