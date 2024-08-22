@@ -12,7 +12,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@TypeAlias("Users")
+@TypeAlias("User")
 public class Users {
     @Id
     private int Id;

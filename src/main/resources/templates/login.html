@@ -122,17 +122,28 @@
     margin-top: 30px;
     color: #fff;
   }
+  .invalid{
+
+    color: white;
+    background-color: red;
+    border-radius: 5px;
+    padding-bottom: 3px;
+    padding-top: 3px;
+
+  }
 </style>
 <body>
 <div class="wrapper">
-  <form action="/authenticate" method="post">
+  <form id="loginForm" th:action="@{/login}" method="post">
     <h2>Login</h2>
+    <div th:if="${param.error}" class="invalid">
+      Invalid username or password.</div>
     <div class="input-field">
-      <input type="email" name="email" required>
+      <input type="email" id="email" name="email" required>
       <label>Enter your email</label>
     </div>
     <div class="input-field">
-      <input type="password" name="password" required>
+      <input type="password" id="password" name="password" required>
       <label>Enter your password</label>
     </div>
     <div class="forget">
@@ -148,5 +159,6 @@
     </div>
   </form>
 </div>
+<script src="/script.js"></script>
 </body>
 </html>

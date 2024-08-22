@@ -17,7 +17,6 @@ public class UserPrincipal implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     private final Users user;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority("USER"));
@@ -25,11 +24,13 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public String getPassword() {
+
         return user.getPassword();
     }
 
     @Override
     public String getUsername() {
+
         return user.getEmail();
     }
 
