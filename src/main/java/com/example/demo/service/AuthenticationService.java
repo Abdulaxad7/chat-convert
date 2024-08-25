@@ -4,18 +4,35 @@ import com.example.demo.auth.LoginRequest;
 import com.example.demo.model.Users;
 import com.example.demo.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import static com.example.demo.auth.TokenHolder.TOKEN;
 
 
 
+/**
+ * The AuthenticationService class is responsible for handling user registration and authentication functionality.
+ * It provides methods to register a new user and authenticate a user.
 
+ * Dependencies:
+ *   - UserRepo: Used for accessing the user repository to save user data.
+ *   - AuthenticationManager: Used for performing user authentication.
+ *   - JwtServices: Used for generating authentication tokens.
+
+ * Usage:
+ *   AuthenticationService authService = new AuthenticationService(userRepo, authManager, jwtService);
+ *   String token = authService.register(user);
+ *   String authenticatedToken = authService.authenticate(loginRequest);
+ */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationService {
+
 
     private final UserRepo repo;
 
@@ -25,24 +42,22 @@ public class AuthenticationService {
 
     private final BCryptPasswordEncoder encoder=new BCryptPasswordEncoder();
 
-    public String register(Users user){
+    public void register(Users user){
         user.setId(0);
-        System.out.println(user);
-        user.setPassword(encoder.encode(user.getPassword()));
 
+        user.setPassword(encoder.encode(user.getPassword()));
         repo.save(user);
-        return jwtService.generateToken(user.getEmail());
+        TOKEN = "Bearer " + jwtService.generateToken(user.getEmail());
+
     }
 
-    public String authenticate(LoginRequest user) {
+    public void authenticate(LoginRequest user) {
 
-        Authentication manager=authManager.
-                authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword()));
-        if (manager.isAuthenticated()){
-            System.out.println("got inside");
-            return jwtService.generateToken(user.getEmail());
+        Authentication manager = authManager.
+                authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+        if (manager.isAuthenticated()) {
+
+            TOKEN = "Bearer " + jwtService.generateToken(user.getEmail());
         }
-
-        return "fail";
     }
 }

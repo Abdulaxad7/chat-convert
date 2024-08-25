@@ -1,6 +1,5 @@
 package com.example.demo.filter;
 
-import com.example.demo.model.Users;
 import com.example.demo.service.JwtServices;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -8,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,25 +16,36 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.IOException;
+import static com.example.demo.auth.TokenHolder.TOKEN;
 
+
+/**
+ * The JwtFilter class is a filter that handles JWT authentication in a web application.
+ * It extends the OncePerRequestFilter class and overrides the doFilterInternal() method
+ * to perform the necessary authentication logic.
+
+ * This filter checks the Authorization header of the incoming request for a JWT token. If a valid token
+ * is found, it extracts the email from the token and validates it*/
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtServices jwtServices;
 
     private final ApplicationContext context;
+
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,@NonNull HttpServletResponse response, @NonNull FilterChain filterChain)  throws ServletException, IOException {
 
-        String authHeader=request.getHeader("Authorization");
+        String authHeader=TOKEN;
         String token= null;
         String email=null;
 
-        if (authHeader!=null && authHeader.startsWith("Bearer")){
+        if (authHeader!=null && authHeader.startsWith("Bearer ")){
             token=authHeader.substring(7);
             email=jwtServices.extractEmail(token);
+            System.out.println("token got.  "+token);
         }
         if (email!=null && SecurityContextHolder.getContext().getAuthentication()==null){
             UserDetails details=context.getBean(UserDetailsService.class).loadUserByUsername(email);
@@ -45,8 +56,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }
-
-
         filterChain.doFilter(request,response);
     }
+
 }

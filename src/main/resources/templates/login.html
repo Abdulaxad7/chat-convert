@@ -134,7 +134,7 @@
 </style>
 <body>
 <div class="wrapper">
-  <form id="loginForm" th:action="@{/login}" method="post">
+  <form id="loginForm" action="/login" method="post">
     <h2>Login</h2>
     <div th:if="${param.error}" class="invalid">
       Invalid username or password.</div>
@@ -159,6 +159,8 @@
     </div>
   </form>
 </div>
-<script src="/script.js"></script>
+<script>
+
+</script>
 </body>
 </html>

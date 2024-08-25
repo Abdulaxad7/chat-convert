@@ -126,7 +126,7 @@
 </style>
 <body>
 <div class="wrapper">
-  <form action="/register" method="post">
+  <form id="registerForm" action="/register" method="post">
     <h2>Create Account</h2>
     <div class="input-field">
       <input type="text" name="firstName" required>
@@ -137,11 +137,11 @@
       <label>Enter your Lastname</label>
     </div>
     <div class="input-field">
-      <input type="email" name="email" required>
+      <input id="email" type="email" name="email" required>
       <label>Enter your email</label>
     </div>
     <div class="input-field">
-      <input type="password" name="password" required>
+      <input id="password" type="password" name="password" required>
       <label>Create a password</label>
     </div>
     <div class="forget">

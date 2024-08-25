@@ -4,20 +4,19 @@ package com.example.demo.controller;
 import com.example.demo.auth.LoginRequest;
 import com.example.demo.model.Users;
 import com.example.demo.service.AuthenticationService;
-import jakarta.servlet.http.HttpServletRequest;
+
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Map;
+import java.io.IOException;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
     private final AuthenticationService service;
 
@@ -36,40 +35,21 @@ public class AuthController {
 
     @GetMapping("/")
     public String home(){
-        System.out.println("got home");
-
         return "home";
     }
-
 
     @PostMapping("/register")
-    public String register( Users user) {
-
-        System.out.println(service.register(user));
+    public String register( Users user, HttpServletResponse response) {
+       service.register(user);
         return "home";
     }
 
-//    @PostMapping("/login")
-//    public String authenticate( LoginRequest request){
-//        System.out.println("got login post");
-//        System.out.println(service.authenticate(request));
-//        return "home";
-//    }
-@PostMapping("/login")
-public ResponseEntity<?> authenticate( LoginRequest request) {
-    String token = service.authenticate(request);
-    if (token.equals("fail")) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid credentials"));
+    @PostMapping("/login")
+    public String authenticate(LoginRequest loginRequest) throws IOException {
+        service.authenticate(loginRequest);
+        return "home";
     }
-    return ResponseEntity.ok(Map.of("token", token));
-}
 
-    @GetMapping("/protected-endpoint")
-    public ResponseEntity<?> getProtectedData(HttpServletRequest request) {
-        // Example protected data
-        Map<String, String> data = Map.of("message", "This is protected data");
-        return ResponseEntity.ok(data);
-    }
 
 
 }

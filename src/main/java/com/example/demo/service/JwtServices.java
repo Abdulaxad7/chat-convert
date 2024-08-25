@@ -17,6 +17,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * The JwtServices class provides methods for generating and validating JWT tokens.
+ * It utilizes the JJWT library for JWT token processing.
+
+ * Example usage:
+
+ * JwtServices jwtService = new JwtServices();
+ * String token = jwtService.generateToken("username");
+ * String email = jwtService.extractEmail(token);
+ * boolean isValid = jwtService.validateToken(token, userDetails);
+ */
 @Service
 public class JwtServices {
 
@@ -33,16 +44,19 @@ public class JwtServices {
 
     public String generateToken(String username){
         Map<String,Object> map=new HashMap<>();
-        return Jwts
+
+              return   Jwts
                 .builder()
                 .claims()
                 .add(map)
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis()+60*60*300))
+                .expiration(new Date(System.currentTimeMillis()+60*60*1000))
                 .and()
                 .signWith(getKey())
-                .compact();
+                        .compact();
+
+
     }
 
 
