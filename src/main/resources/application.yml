@@ -15,3 +15,11 @@ spring:
     port: 587
     username: mastermak837@gmail.com
     password: xlmdzklbepeohiiz
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+

@@ -5,8 +5,10 @@ import io.jsonwebtoken.Jwts;
 
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.ErrorResponseException;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -29,6 +31,7 @@ import java.util.function.Function;
  * boolean isValid = jwtService.validateToken(token, userDetails);
  */
 @Service
+@Slf4j
 public class JwtServices {
 
     private static String SECRET_KEY="";
@@ -41,10 +44,12 @@ public class JwtServices {
             throw new RuntimeException("No Such Algorithm Exception");
         }
     }
-
     public String generateToken(String username){
-        Map<String,Object> map=new HashMap<>();
+            return createToken(username);
+    }
 
+    public String createToken(String username){
+        Map<String,Object> map=new HashMap<>();
               return   Jwts
                 .builder()
                 .claims()
@@ -54,9 +59,7 @@ public class JwtServices {
                 .expiration(new Date(System.currentTimeMillis()+60*60*1000))
                 .and()
                 .signWith(getKey())
-                        .compact();
-
-
+                .compact();
     }
 
 
@@ -70,22 +73,33 @@ public class JwtServices {
 
     private <T> T extractClaims(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
+        try {
+            return claimsResolver.apply(claims);
+        }catch (Exception e){
+              log.error(e.toString());
+              return null;
+        }
     }
 
     private Claims extractAllClaims(String token) {
+        try {
         return Jwts
                 .parser()
                 .verifyWith(getKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+    }catch (Exception e){
+        return null;
+    }
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {
-        final String email = extractEmail(token);
-        return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
-    }
+
+            final String email = extractEmail(token);
+            return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
+
+       }
 
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());

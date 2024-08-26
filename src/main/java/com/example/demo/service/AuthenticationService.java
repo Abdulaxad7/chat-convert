@@ -1,8 +1,11 @@
 package com.example.demo.service;
 
+import com.example.demo.auth.EmailVerification;
 import com.example.demo.auth.LoginRequest;
 import com.example.demo.model.Users;
 import com.example.demo.repo.UserRepo;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,8 +13,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-import static com.example.demo.auth.TokenHolder.TOKEN;
-
 
 
 /**
@@ -32,7 +33,7 @@ import static com.example.demo.auth.TokenHolder.TOKEN;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthenticationService {
-
+    private final EmailVerification verification;
 
     private final UserRepo repo;
 
@@ -42,22 +43,39 @@ public class AuthenticationService {
 
     private final BCryptPasswordEncoder encoder=new BCryptPasswordEncoder();
 
-    public void register(Users user){
+    public void register(Users user, HttpServletResponse response){
         user.setId(0);
 
         user.setPassword(encoder.encode(user.getPassword()));
         repo.save(user);
-        TOKEN = "Bearer " + jwtService.generateToken(user.getEmail());
-
+        String token = jwtService.generateToken(user.getEmail());
+        Cookie jwtCookie = new Cookie("jwt", token);
+        jwtCookie.setHttpOnly(false);
+        jwtCookie.setPath("/");
+        jwtCookie.setMaxAge(7 * 24 * 60 * 60);
+        response.addCookie(jwtCookie);
     }
 
-    public void authenticate(LoginRequest user) {
+    public void authenticate(LoginRequest user, HttpServletResponse response) {
 
         Authentication manager = authManager.
                 authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
         if (manager.isAuthenticated()) {
-
-            TOKEN = "Bearer " + jwtService.generateToken(user.getEmail());
+            String token = jwtService.generateToken(user.getEmail());
+            Cookie jwtCookie = new Cookie("jwt", token);
+            jwtCookie.setHttpOnly(false);
+            jwtCookie.setPath("/");
+            jwtCookie.setMaxAge(7 * 24 * 60 * 60);
+            response.addCookie(jwtCookie);
         }
+    }
+
+    public boolean verifyMail( String code) {
+        return verification.CheckEmail(code);
+    }
+
+
+    public void sendMail(Users user) {
+        verification.SendEmail(user);
     }
 }
