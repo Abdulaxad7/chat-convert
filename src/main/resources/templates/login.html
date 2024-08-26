@@ -134,7 +134,7 @@
 </style>
 <body>
 <div class="wrapper">
-  <form id="loginForm" th:action="@{/login}" method="post">
+  <form id="loginForm" th:action="@{/api/auth/login}" method="post">
     <h2>Login</h2>
     <div th:if="${param.error}" class="invalid" id="errorMessage">
       Invalid username or password.</div>
@@ -155,7 +155,7 @@
     </div>
     <button type="submit">Log In</button>
     <div class="register">
-      <p>Don't have an account? <a href="/register">Register</a></p>
+      <p>Don't have an account? <a href="/api/auth/register">Register</a></p>
     </div>
   </form>
 </div>

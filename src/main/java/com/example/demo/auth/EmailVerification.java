@@ -29,7 +29,7 @@ public class EmailVerification {
         pass = UUID.randomUUID().toString();
         message.setTo(user.getEmail());
         message.setSubject("Email Verification");
-        message.setText("Your Email Verification Code is:  \n" + pass + "\n" + "Do not share this code with anyone");
+        message.setText("Your Email Verification Code is:\n\n\t\t" + pass + "\n\n" + "Do not share this code with anyone");
         System.out.println(pass);
         sendmail.send(message);
     }

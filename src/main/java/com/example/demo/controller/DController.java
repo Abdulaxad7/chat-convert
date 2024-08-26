@@ -9,5 +9,10 @@ public class DController {
     public String home(){
         return "home";
     }
+    @GetMapping("/")
+    public String home2(){
+        return "home";
+    }
+
 
 }

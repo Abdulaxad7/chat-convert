@@ -17,17 +17,11 @@ import java.io.IOException;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-
+@RequestMapping("/api/auth")
 public class AuthController {
+
     private final AuthenticationService service;
-    private Users user;
-
-    @GetMapping("/")
-    public String home(){
-        return "home";
-    }
-
-
+    private  Users user;
     @GetMapping("/login")
     public String authenticate_get(){
 
@@ -43,6 +37,7 @@ public class AuthController {
     public String register_get(){
         System.out.println("got register");
         return "register";
+
     }
     @PostMapping("/register")
     public void register( Users user, HttpServletResponse response) throws IOException {
@@ -64,7 +59,5 @@ public class AuthController {
            response.sendRedirect("/");
        }else response.sendRedirect("email-ver");
     }
-
-
 }
 
