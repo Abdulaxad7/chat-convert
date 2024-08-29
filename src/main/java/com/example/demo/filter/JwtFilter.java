@@ -37,6 +37,8 @@ public class JwtFilter extends OncePerRequestFilter
 {
     private final JwtServices jwtServices;
 
+    public static Boolean CHECK=false;
+
     private final ApplicationContext context;
 
     @Override
@@ -61,7 +63,8 @@ public class JwtFilter extends OncePerRequestFilter
 
         if (authHeader!=null && authHeader.startsWith("Bearer ")){
             token=authHeader.substring(7);
-            log.info("Bearer token: {}",token);
+            if (CHECK) log.info("Bearer token: {}",token);
+            CHECK=false;
             email=jwtServices.extractEmail(token);
         }
         if (email!=null && SecurityContextHolder.getContext().getAuthentication()==null){

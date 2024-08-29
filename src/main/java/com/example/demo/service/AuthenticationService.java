@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import static com.example.demo.filter.JwtFilter.CHECK;
 
 
 /**
@@ -45,15 +46,10 @@ public class AuthenticationService {
 
     public void register(Users user, HttpServletResponse response){
         user.setId(0);
-
         user.setPassword(encoder.encode(user.getPassword()));
+        getCookie(response, user.getEmail());
+
         repo.save(user);
-        String token = jwtService.generateToken(user.getEmail());
-        Cookie jwtCookie = new Cookie("jwt", token);
-        jwtCookie.setHttpOnly(false);
-        jwtCookie.setPath("/");
-        jwtCookie.setMaxAge(7 * 24 * 60 * 60);
-        response.addCookie(jwtCookie);
     }
 
     public void authenticate(LoginRequest user, HttpServletResponse response) {
@@ -61,13 +57,18 @@ public class AuthenticationService {
         Authentication manager = authManager.
                 authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
         if (manager.isAuthenticated()) {
-            String token = jwtService.generateToken(user.getEmail());
-            Cookie jwtCookie = new Cookie("jwt", token);
-            jwtCookie.setHttpOnly(false);
-            jwtCookie.setPath("/");
-            jwtCookie.setMaxAge(7 * 24 * 60 * 60);
-            response.addCookie(jwtCookie);
+            getCookie(response, user.getEmail());
         }
+    }
+
+    private void getCookie(HttpServletResponse response, String email) {
+        CHECK=true;
+        String token = jwtService.generateToken(email);
+        Cookie jwtCookie = new Cookie("jwt", token);
+        jwtCookie.setHttpOnly(false);
+        jwtCookie.setPath("/");
+        jwtCookie.setMaxAge(7 * 24 * 60 * 60);
+        response.addCookie(jwtCookie);
     }
 
     public boolean verifyMail( String code) {

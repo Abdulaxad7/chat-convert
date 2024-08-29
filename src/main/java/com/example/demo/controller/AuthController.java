@@ -42,22 +42,21 @@ public class AuthController {
     @PostMapping("/register")
     public void register( Users user, HttpServletResponse response) throws IOException {
         this.user=user;
-       response.sendRedirect("/email-ver");
+        response.sendRedirect("email-ver");
 
     }
 
-    @GetMapping("email-ver")
+    @GetMapping("/email-ver")
     public String verification(Model model){
         model.addAttribute("email",user.getEmail());
         service.sendMail(user);
         return "verification";
     }
-    @PostMapping("email-ver")
+    @PostMapping("/email-ver")
     public void verification(@RequestParam("code")String code,HttpServletResponse response) throws IOException {
-       if (service.verifyMail(code)){
-           service.register(user,response);
-           response.sendRedirect("/");
-       }else response.sendRedirect("email-ver");
+        if (service.verifyMail(code)){
+            service.register(user,response);
+            response.sendRedirect("/");
+        }else response.sendRedirect("email-ver");
     }
 }
-

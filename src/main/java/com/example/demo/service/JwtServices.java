@@ -68,7 +68,7 @@ public class JwtServices {
         try {
             return claimsResolver.apply(claims);
         }catch (Exception e){
-              log.error(e.toString());
+              log.warn(e.toString());
               return null;
         }
     }

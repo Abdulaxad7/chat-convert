@@ -21,8 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 
 /**
- * The SecurityConfig class is a configuration class for Spring Security.
- * It defines the security rules and filters for the web application.
+ *
  */
 @Configuration
 @EnableWebSecurity
