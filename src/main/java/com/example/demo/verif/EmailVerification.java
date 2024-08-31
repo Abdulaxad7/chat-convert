@@ -1,4 +1,4 @@
-package com.example.demo.auth;
+package com.example.demo.verif;
 
 import com.example.demo.model.Users;
 import lombok.Data;
@@ -10,6 +10,9 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
+
+import static com.example.demo.verif.Message.HTML_MESSAGE;
+import static com.example.demo.verif.Message.PASSWORD;
 
 
 /**
@@ -53,9 +56,6 @@ import java.util.UUID;
 @Service
 @Data
 public class EmailVerification {
-
-    private String pass;
-
     @Autowired
     private JavaMailSender javaMailSender;
 
@@ -67,59 +67,18 @@ public class EmailVerification {
 
     @Async
     public void SendEmail(Users user) {
-        pass = UUID.randomUUID().toString();
+        PASSWORD = UUID.randomUUID().toString();
         MimeMessagePreparator messagePreparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
             messageHelper.setTo(user.getEmail());
             messageHelper.setSubject("Email Verification");
-            messageHelper.setText("<!DOCTYPE html>\n" +
-                    "<html lang=\"en\">\n" +
-                    "<head>\n" +
-                    "    <meta charset=\"UTF-8\">\n" +
-                    "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
-                    "    <title>Email Verification Code</title>\n" +
-                    "    <style>\n" +
-                    "        body {\n" +
-                    "            font-family: Arial, sans-serif;\n" +
-                    "            color: #333;\n" +
-                    "            line-height: 1.6;\n" +
-                    "            margin: 20px;\n" +
-                    "        }\n" +
-                    "        .container {\n" +
-                    "            max-width: 600px;\n" +
-                    "            margin: auto;\n" +
-                    "            padding: 20px;\n" +
-                    "            border: 1px solid #ddd;\n" +
-                    "            border-radius: 8px;\n" +
-                    "            background-color: #f9f9f9;\n" +
-                    "        }\n" +
-                    "        .code {\n" +
-                    "            font-size: 18px;\n" +
-                    "            font-weight: bold;\n" +
-                    "            color: #007bff;\n" +
-                    "            margin: 20px 0;\n" +
-                    "        }\n" +
-                    "        .note {\n" +
-                    "            font-size: 14px;\n" +
-                    "            color: #666;\n" +
-                    "        }\n" +
-                    "    </style>\n" +
-                    "</head>\n" +
-                    "<body>\n" +
-                    "    <div class=\"container\">\n" +
-                    "        <p>Your Email Verification Code is:</p>\n" +
-                    "        <p class=\"code\">"+pass+"</p>\n" +
-                    "        <p class=\"note\">Do not share this code with anyone.</p>\n" +
-                    "    </div>\n" +
-                    "</body>\n" +
-                    "</html>\n", true);
-            System.out.println(pass);
+            messageHelper.setText(HTML_MESSAGE(), true);
+            System.out.println(PASSWORD);
             messageHelper.setFrom("Chat Creator <noreply@chat.com>");
         };
         javaMailSender.send(messagePreparator);
     }
-
     public boolean CheckEmail(String password){
-        return pass.equals(password);
+        return PASSWORD.equals(password);
     }
 }

@@ -126,14 +126,14 @@
 <body>
 <div class="wrapper">
     <form id="email-ver" action="/api/auth/email-ver" method="post">
-        <h2>Verify</h2>
+        <h2>Verification</h2>
         <div>
             <div class="input-field">
                 <input type="text" name="lastName" disabled th:value="${email}">
             </div>
         </div>
         <div class="input-field">
-            <input id="code" type="text" name="code" required>
+            <input id="code" type="password" name="code" required>
             <label>Verification code</label>
         </div>
 

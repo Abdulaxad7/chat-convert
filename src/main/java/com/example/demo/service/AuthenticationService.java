@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.auth.EmailVerification;
+import com.example.demo.verif.EmailVerification;
 import com.example.demo.auth.LoginRequest;
 import com.example.demo.model.Users;
 import com.example.demo.repo.UserRepo;
