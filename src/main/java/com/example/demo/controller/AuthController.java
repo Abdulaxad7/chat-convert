@@ -30,7 +30,7 @@ public class AuthController {
     @PostMapping("/login")
     public void authenticate(LoginRequest loginRequest,HttpServletResponse response) throws IOException {
         service.authenticate(loginRequest,response);
-        response.sendRedirect("/");
+        response.sendRedirect("/args/home");
     }
 
     @GetMapping("/register")
