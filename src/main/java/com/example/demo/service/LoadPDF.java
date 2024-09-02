@@ -2,6 +2,8 @@ package com.example.demo.service;
 
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -21,11 +23,11 @@ public class LoadPDF {
     public static void generatePdf(String urlString) {
         BufferedReader in = null;
         FileWriter writer = null;
-
+        File inputFile = new File("/Users/abdulaxad/eclipse-workspace/Chat/src/main/java/com/example/demo/htmlSource/example.html");
+        log.info("HTML created successfully.");
         try {
             URL url = new URI(urlString).toURL();
             in = new BufferedReader(new InputStreamReader(url.openStream()));
-            File inputFile = new File("/Users/abdulaxad/eclipse-workspace/Chat/src/main/java/com/example/demo/htmlSource/example.html");
             writer = new FileWriter(inputFile);
 
             String inputLine;
@@ -54,11 +56,41 @@ public class LoadPDF {
         } catch (Exception e) {
             log.error(e.toString());
         } finally {
+            if (inputFile.delete()) {
+                log.info("HTML File removed");
+            } else {
+                log.error("Exception on removing HTML file");
+            }
             try {
                 if (in != null) in.close();
                 if (writer != null) writer.close();
             } catch (Exception ioException) {
                 log.error(ioException.toString());
+            }
+        }
+    }
+    public static void Download( HttpServletResponse response){
+        String path="/Users/abdulaxad/eclipse-workspace/Chat/src/main/java/com/example/demo/htmlSource/output.pdf";
+        File file = new File(path);
+
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=output.pdf");
+
+        try (FileInputStream fis = new FileInputStream(file);
+             ServletOutputStream os = response.getOutputStream()) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = fis.read(buffer)) != -1) {
+                os.write(buffer, 0, bytesRead);
+            }
+            os.flush();
+        } catch (IOException e) {
+            log.error(e.toString());
+        }finally {
+            if (file.delete()) {
+                log.info("PDF File removed");
+            } else {
+                log.error("Exception on removing PDF file");
             }
         }
     }

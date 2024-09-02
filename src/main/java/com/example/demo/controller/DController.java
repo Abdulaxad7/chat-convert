@@ -18,7 +18,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 @Controller
-@RequestMapping("/args")
 @Slf4j
 public class DController {
     @GetMapping("/home")
@@ -30,26 +29,10 @@ public class DController {
         return "home";
     }
     @PostMapping("/generate/pdf")
-    public void generatePdf(@RequestParam("url") String url, HttpServletResponse response){
+    public void generatePdf(@RequestParam("url") String url, HttpServletResponse response) {
         log.info("got url: {}", url);
         LoadPDF.generatePdf(url);
-        File file = new File("/Users/abdulaxad/eclipse-workspace/Chat/src/main/java/com/example/demo/htmlSource/output.pdf");
-
-        response.setContentType("application/pdf");
-        response.setHeader("Content-Disposition", "attachment; filename=output.pdf");
-
-        try (FileInputStream fis = new FileInputStream(file);
-             ServletOutputStream os = response.getOutputStream()) {
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = fis.read(buffer)) != -1) {
-                os.write(buffer, 0, bytesRead);
-            }
-            os.flush();
-        } catch (IOException e) {
-           log.error(e.toString());
-        }
-    }
-
+        LoadPDF.Download(response);
+     }
 
 }
