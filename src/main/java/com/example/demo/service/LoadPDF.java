@@ -4,23 +4,29 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.net.URI;
 import java.net.URL;
 
-@Service
+
+
+
+/**
+ * Class responsible for loading and creating PDF files from given URL content.
+ */
 public class LoadPDF {
 
     private static final Logger log = LoggerFactory.getLogger(LoadPDF.class);
 
-    public static void generatePdf(String urlString) {
+    @SneakyThrows
+    public static void generatePdf(String urlString, HttpServletResponse response) {
         BufferedReader in = null;
         FileWriter writer = null;
         File inputFile = new File("/Users/abdulaxad/eclipse-workspace/Chat/src/main/java/com/example/demo/htmlSource/example.html");
@@ -55,6 +61,7 @@ public class LoadPDF {
 
         } catch (Exception e) {
             log.error(e.toString());
+            response.sendRedirect("/");
         } finally {
             if (inputFile.delete()) {
                 log.info("HTML File removed");
