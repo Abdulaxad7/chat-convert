@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Data
-@Document(collection = "Entrepreneur")
+@Document(collection = "************")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
