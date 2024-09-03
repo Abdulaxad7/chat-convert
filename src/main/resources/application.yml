@@ -8,13 +8,13 @@ spring:
     name: demo
   data:
     mongodb:
-      uri: mongodb+srv://root:root@abdulaxad.jgk5c4k.mongodb.net/?retryWrites=true&w=majority&appName=Abdulaxad
-      database: Demo
+      uri: mongodb+srv://*****:*****:@******.******.******.******/?retryWrites=******&w=******&appName=******
+      database: ******
   mail:
     host: smtp.gmail.com
     port: 587
-    username: mastermak837@gmail.com
-    password: xlmdzklbepeohiiz
+    username: ******@gmail.com
+    password: ******
     properties:
       mail:
         smtp:
