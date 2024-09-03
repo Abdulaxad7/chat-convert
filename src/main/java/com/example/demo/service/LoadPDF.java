@@ -29,7 +29,7 @@ public class LoadPDF {
     public static void generatePdf(String urlString, HttpServletResponse response) {
         BufferedReader in = null;
         FileWriter writer = null;
-        File inputFile = new File("/Users/abdulaxad/eclipse-workspace/Chat/src/main/java/com/example/demo/htmlSource/example.html");
+        File inputFile = new File("/******/******/******/******/src/main/java/com/example/demo/htmlSource/example.html");
         log.info("HTML created successfully.");
         try {
             URL url = new URI(urlString).toURL();
@@ -47,7 +47,7 @@ public class LoadPDF {
             Elements scriptTags = document.select("script");
 
             com.itextpdf.text.Document  document1=new com.itextpdf.text.Document();
-            PdfWriter.getInstance(document1,new FileOutputStream("/Users/abdulaxad/eclipse-workspace/Chat/src/main/java/com/example/demo/htmlSource/output.pdf"));
+            PdfWriter.getInstance(document1,new FileOutputStream("/******/******/******/******/src/main/java/com/example/demo/htmlSource/output.pdf"));
             document1.open();
             StringBuilder string= new StringBuilder();
             for (var scriptTag : scriptTags) {
@@ -77,7 +77,7 @@ public class LoadPDF {
         }
     }
     public static void Download( HttpServletResponse response){
-        String path="/Users/abdulaxad/eclipse-workspace/Chat/src/main/java/com/example/demo/htmlSource/output.pdf";
+        String path="/******/******/******/******/src/main/java/com/example/demo/htmlSource/output.pdf";
         File file = new File(path);
 
         response.setContentType("application/pdf");
